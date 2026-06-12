@@ -1,0 +1,15 @@
+[project]
+name = "tbg-sym"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "datashader>=0.19.1",
+    "geckodriver>=0.0.1",
+    "holoviews>=1.22.1",
+    "logging>=0.4.9.6",
+    "numpy>=2.4.6",
+    "pathlib>=1.0.1",
+    "selenium>=4.44.0",
+]

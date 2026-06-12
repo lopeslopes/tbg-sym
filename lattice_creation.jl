@@ -4,7 +4,7 @@ using NearestNeighbors
 using Printf
 
 # INITIAL DEFINITIONS
-n = 200000
+n = 500000
 
 a_top = 2.46
 a1_top = [a_top, 0.0]
@@ -20,14 +20,14 @@ latB1 = zeros(n ÷ 2, 2)
 
 HexUtils.create_honeycomb_lattice!(latA1, latB1, a1_top, a2_top, false)
 
-max_radius = maximum(latA1) - 50.0
+max_radius = maximum(latA1) - 10.0
 
-try write_lattice(latA1, "data/latticeA1_200k.dat", max_radius)
+try write_lattice(latA1, "data/latticeA1_500k.dat", max_radius)
 catch e
     println(e)
 end
 
-try write_lattice(latB1, "data/latticeB1_200k.dat", max_radius)
+try write_lattice(latB1, "data/latticeB1_500k.dat", max_radius)
 catch e
     println(e)
 end
@@ -57,6 +57,6 @@ for q in [61.0, 60.0, 59.0, 58.0]
         a_bot = 2.46
         a1_bot = [a_bot, 0.0]
         a2_bot = [-a_bot*cos(pi/3.0), a_bot*sin(pi/3.0)]
-        write_properties(p, q, j, steps, max_radius, a_top, a1_top, a2_top, a_bot, a1_bot, a2_bot, "data/"*ang_name*"_200k/properties.dat")
+        write_properties(p, q, j, steps, max_radius, a_top, a1_top, a2_top, a_bot, a1_bot, a2_bot, "data/"*ang_name*"_500k/properties.dat")
     end
 end

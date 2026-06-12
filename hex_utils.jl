@@ -342,36 +342,36 @@ function create_tbg_system(n, angle, ang_name, treeA1, treeB1, AB_stacking, max_
     latAB = transpose(hcat(AB...))
     latBB = transpose(hcat(BB...))
 
-    try mkdir("data/"*ang_name*"_200k")
+    try mkdir("data/"*ang_name*"_500k")
     catch e
     end
 
-    try write_lattice(latAA, "data/"*ang_name*"_200k/latticeAA.dat", max_radius)
+    try write_lattice(latAA, "data/"*ang_name*"_500k/latticeAA.dat", max_radius)
     catch e
         println("AA lattice is empty!")
     end
 
-    try write_lattice(latBA, "data/"*ang_name*"_200k/latticeBA.dat", max_radius)
+    try write_lattice(latBA, "data/"*ang_name*"_500k/latticeBA.dat", max_radius)
     catch e
         println("BA lattice is empty!")
     end
 
-    try write_lattice(latAB, "data/"*ang_name*"_200k/latticeAB.dat", max_radius)
+    try write_lattice(latAB, "data/"*ang_name*"_500k/latticeAB.dat", max_radius)
     catch e
         println("AB lattice is empty!")
     end
 
-    try write_lattice(latBB, "data/"*ang_name*"_200k/latticeBB.dat", max_radius)
+    try write_lattice(latBB, "data/"*ang_name*"_500k/latticeBB.dat", max_radius)
     catch e
         println("BB lattice is empty!")
     end 
 
-    try write_lattice(latA2, "data/"*ang_name*"_200k/latticeA2.dat", max_radius)
+    try write_lattice(latA2, "data/"*ang_name*"_500k/latticeA2.dat", max_radius)
     catch e
         println("A2 lattice is empty!")
     end
 
-    try write_lattice(latB2, "data/"*ang_name*"_200k/latticeB2.dat", max_radius)
+    try write_lattice(latB2, "data/"*ang_name*"_500k/latticeB2.dat", max_radius)
     catch e
         println("B2 lattice is empty!")
     end
