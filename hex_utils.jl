@@ -1,8 +1,8 @@
 module HexUtils
 
-using LinearAlgebra
+using LinearAlgebra, Printf, NearestNeighbors
 
-export create_honeycomb_lattice!, write_lattice, rotate_lattice!, rotate_point!, read_lattice, read_lattice_3d, magic_angle, write_properties, read_properties, read_properties_raw, cell_area
+export create_honeycomb_lattice!, write_lattice, rotate_lattice!, rotate_point!, read_lattice, read_lattice_3d, magic_angle, write_properties, read_properties, read_properties_raw, cell_area, create_tbg_system
 
 
 function create_honeycomb_lattice!(latticeA, latticeB, a1, a2, ab_stacking)
@@ -289,6 +289,92 @@ function cell_area(a1, a2)
     a2_3d = [a2[1], a2[2], 0.0]
     area_lat_cell = LinearAlgebra.norm(LinearAlgebra.cross(a1_3d, a2_3d))
     return area_lat_cell
+end
+
+function create_tbg_system(n, angle, ang_name, treeA1, treeB1, AB_stacking, max_radius)
+    latA2 = zeros(n ÷ 2, 2)
+    latB2 = zeros(n ÷ 2, 2)
+    
+    a_bot = 2.46
+    a1_bot = [a_bot, 0.0]
+    a2_bot = [-a_bot*cos(pi/3.0), a_bot*sin(pi/3.0)]
+
+    HexUtils.create_honeycomb_lattice!(latA2, latB2, a1_bot, a2_bot, AB_stacking)
+
+    println("Angle in radians: ", angle)
+    println("Angle in degrees: ", (angle * 180) / pi)
+
+    # ROTATE SECOND LATTICE BY THE ANGLE
+    rot_axis = [0.0, 0.0]
+    rotate_lattice!(latA2, angle, rot_axis)
+    rotate_lattice!(latB2, angle, rot_axis)
+
+    tol = 5.0e-3
+    println("Tolerance:        ", tol)
+    name = @sprintf("%6.4f", tol)
+
+    AA = []
+    BA = []
+    AB = []
+    BB = []
+
+    for i in 1:div(n,2)
+        indAA, distAA = knn(treeA1, latA2[i,:], 1)
+        indBA, distBA = knn(treeB1, latA2[i,:], 1)
+        indAB, distAB = knn(treeA1, latB2[i,:], 1)
+        indBB, distBB = knn(treeB1, latB2[i,:], 1)
+        if distAA[1] < tol
+            push!(AA, latA2[i,:])
+        end
+        if distBA[1] < tol
+            push!(BA, latA2[i,:])
+        end
+        if distAB[1] < tol
+            push!(AB, latB2[i,:])
+        end
+        if distBB[1] < tol
+            push!(BB, latB2[i,:])
+        end
+    end
+
+    latAA = transpose(hcat(AA...))
+    latBA = transpose(hcat(BA...))
+    latAB = transpose(hcat(AB...))
+    latBB = transpose(hcat(BB...))
+
+    try mkdir("data/"*ang_name*"_200k")
+    catch e
+    end
+
+    try write_lattice(latAA, "data/"*ang_name*"_200k/latticeAA.dat", max_radius)
+    catch e
+        println("AA lattice is empty!")
+    end
+
+    try write_lattice(latBA, "data/"*ang_name*"_200k/latticeBA.dat", max_radius)
+    catch e
+        println("BA lattice is empty!")
+    end
+
+    try write_lattice(latAB, "data/"*ang_name*"_200k/latticeAB.dat", max_radius)
+    catch e
+        println("AB lattice is empty!")
+    end
+
+    try write_lattice(latBB, "data/"*ang_name*"_200k/latticeBB.dat", max_radius)
+    catch e
+        println("BB lattice is empty!")
+    end 
+
+    try write_lattice(latA2, "data/"*ang_name*"_200k/latticeA2.dat", max_radius)
+    catch e
+        println("A2 lattice is empty!")
+    end
+
+    try write_lattice(latB2, "data/"*ang_name*"_200k/latticeB2.dat", max_radius)
+    catch e
+        println("B2 lattice is empty!")
+    end
 end
 
 end
